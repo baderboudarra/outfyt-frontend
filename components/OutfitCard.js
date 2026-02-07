@@ -3,11 +3,17 @@ import React from "react";
 import { View, Text, Image, StyleSheet, Dimensions, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeIn, useAnimatedStyle, withSpring, useSharedValue } from "react-native-reanimated";
+import { API_URL } from "../services/api";
 
 const { width } = Dimensions.get("window");
 
 export default function OutfitCard({ outfit, image, styleLabel }) {
   const scale = useSharedValue(1);
+  const imageUri = image
+    ? image.startsWith("http")
+      ? image
+      : `${API_URL}/uploads/${image}`
+    : null;
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -21,7 +27,7 @@ export default function OutfitCard({ outfit, image, styleLabel }) {
       <Animated.View entering={FadeIn.duration(500)} style={[styles.card, animatedStyle]}>
         {image && (
           <Image
-            source={{ uri: `http://192.168.33.58:5000/uploads/${image}` }}
+            source={{ uri: imageUri }}
             style={styles.image}
             resizeMode="cover"
           />
